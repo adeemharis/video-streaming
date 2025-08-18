@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { FaUserCircle, FaUpload } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext.jsx";
 
-export default function Navbar({ onLoginClick }) {
+export default function Navbar({ onOpenAuthModal }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
