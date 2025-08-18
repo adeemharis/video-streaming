@@ -127,7 +127,7 @@ export default function Home() {
                 style={{ width: "100%", height: 140, objectFit: "cover", background: "#000" }}
               >
                 <source
-                  src={`http://localhost:5000/${video.filePath}#t=0.1`}
+                  src={`${video.filePath}#t=0.1`}
                   type="video/mp4"
                 />
               </video>

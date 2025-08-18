@@ -61,7 +61,7 @@ export default function Profile() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
         {videos.map(v => (
           <div key={v._id} className="card">
-            <video width="100%" height="180" src={`http://localhost:5000${v.filePath}`} controls />
+            <video width="100%" height="180" src={v.filePath} controls />
             <h4>{v.title}</h4>
             <p style={{ color: "gray" }}>{v.description}</p>
             <p style={{ fontSize: "0.9em", color: "darkgray" }}>
