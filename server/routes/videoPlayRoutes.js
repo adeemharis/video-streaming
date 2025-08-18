@@ -121,7 +121,24 @@ router.get("/tag/:tag", async (req, res) => {
   }
 });
 
-// Delete a video
+// // Delete a video
+// router.delete("/:id", requireAuth, async (req, res) => {
+//   try {
+//     const video = await Video.findById(req.params.id);
+//     if (!video) return res.status(404).json({ error: "Video not found" });
+
+//     // Ensure only uploader can delete
+//     if (video.user.toString() !== req.user.id) {
+//       return res.status(403).json({ error: "Not authorized" });
+//     }
+
+//     await video.deleteOne();
+//     res.json({ message: "Video deleted successfully" });
+//   } catch (err) {
+//     res.status(500).json({ error: "Server error" });
+//   }
+// });
+// Delete a video (also from Cloudinary)
 router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
@@ -132,9 +149,20 @@ router.delete("/:id", requireAuth, async (req, res) => {
       return res.status(403).json({ error: "Not authorized" });
     }
 
+    // Delete from Cloudinary if it exists
+    if (video.cloudinaryId) {
+      try {
+        await cloudinary.uploader.destroy(video.cloudinaryId, { resource_type: "video" });
+      } catch (cloudErr) {
+        console.error("Cloudinary deletion error:", cloudErr);
+        // we don’t return here because we still want to remove it from DB
+      }
+    }
+
     await video.deleteOne();
     res.json({ message: "Video deleted successfully" });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Server error" });
   }
 });
