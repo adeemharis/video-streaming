@@ -14,10 +14,17 @@ dotenv.config();
 
 const app = express();
 
-const PORT = process.env.PORT || 5000;
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
+app.set("trust proxy", 1);
 
-app.use(cors({ origin: CORS_ORIGIN, credentials: true }));
+const PORT = process.env.PORT || 5000;
+// const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
+// If you deploy frontend separately (Vercel/Netlify), set this to that URL
+// You can also pass multiple origins as a comma-separated list
+const allowOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173")
+  .split(",")
+  .map(s => s.trim());
+
+app.use(cors({ origin: allowOrigins, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -35,7 +42,7 @@ app.use("/api/playvideos", videoPlayRoutes);
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
-    app.listen(PORT, () => {
+    app.listen(PORT, "0.0.0.0",() => {
       console.log(`Server listening on http://localhost:${PORT}`);
     });
   })
@@ -45,10 +52,10 @@ mongoose
   });
 
   // Serve React frontend in production
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "client/dist")));
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, "client/dist")));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client/dist", "index.html"));
-  });
-}
+//   app.get("*", (req, res) => {
+//     res.sendFile(path.join(__dirname, "client/dist", "index.html"));
+//   });
+// }

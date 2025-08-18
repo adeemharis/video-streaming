@@ -7,10 +7,11 @@ import { requireAuth } from "../middleware/auth.js";
 const router = express.Router();
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  sameSite: "lax",
+  sameSite: "none",
   secure: process.env.NODE_ENV === "production",
   // 7 days:
-  maxAge: 7 * 24 * 60 * 60 * 1000
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+  path: "/"
 };
 
 function setAuthCookie(res, userId) {
