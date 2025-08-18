@@ -1,14 +1,14 @@
 import { useState } from "react";
 
-export default function AuthModal({ isOpen, onClose, onLogin, onSignup }) {
+export default function AuthModal({ open, onClose, onLogin, onSignup }) {
   const [mode, setMode] = useState("login"); // or "signup"
   const [form, setForm] = useState({ email: "", password: "", username: "" });
 
-  if (!isOpen) return null;
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded shadow-md w-96">
+      <div className="bg-white p-6 rounded shadow-md w-96 relative">
         <h2 className="text-xl font-bold mb-4">
           {mode === "login" ? "Login" : "Signup"}
         </h2>

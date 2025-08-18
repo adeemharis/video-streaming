@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { FaUserCircle, FaUpload } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext.jsx";
 
-export default function Navbar({ onOpenAuthModal }) {
+export default function Navbar({ on }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
@@ -10,7 +10,7 @@ export default function Navbar({ onOpenAuthModal }) {
     if (user) {
       navigate("/profile");
     } else {
-      onOpenAuthModal(); // 🔑 open login/signup modal
+      onOpenAuthModal(); 
     }
   };
 
@@ -18,11 +18,7 @@ export default function Navbar({ onOpenAuthModal }) {
     if (user) {
       navigate("/upload");
     } else {
-      if (onLoginClick) {
-        onLoginClick();
-      } else {
-        alert("Please log in first.");
-      }
+        alert("Please log in first.");  
     }
   };
 
