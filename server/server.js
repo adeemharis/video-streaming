@@ -24,23 +24,32 @@ const PORT = process.env.PORT || 5000;
 //   .split(",")
 //   .map(s => s.trim());
 
-const allowedOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(",")
-  : [];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // allow curl, postman
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
-}));
+// Build a clean allow-list from env (comma-separated)
+const ALLOWED_ORIGINS = (process.env.CORS_ORIGIN || "http://localhost:5173")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
 
-app.options("*", cors());
+// CORS: allow from allow-list, allow Postman/cURL (no Origin), block others
+app.use(
+  cors({
+    origin(origin, cb) {
+      if (!origin) return cb(null, true); // non-browser clients
+      if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+      return cb(null, false); // respond with no CORS headers
+    },
+    credentials: true,
+  })
+);
+
+// (Optional) quick preflight helper without path-to-regexp shenanigans
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
 
 
 app.use(express.json());
