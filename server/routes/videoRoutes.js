@@ -37,26 +37,53 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage });
 
 // Upload video
+// router.post("/upload", requireAuth, upload.single("video"), async (req, res) => {
+//   try {
+//     const { title, description, tags } = req.body;
+
+//     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+
+//     const video = new Video({
+//       user: req.user.id,
+//       title,
+//       description,
+//       tags: tags ? tags.split(",").map((t) => t.trim()) : [],
+//       filePath: `/uploads/${req.file.filename}`,
+//     });
+
+//     await video.save();
+//     res.json({ message: "Video uploaded successfully", video });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// });
+// Upload video
 router.post("/upload", requireAuth, upload.single("video"), async (req, res) => {
   try {
     const { title, description, tags } = req.body;
 
-    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
 
+    // Cloudinary gives us the hosted URL in req.file.path
     const video = new Video({
       user: req.user.id,
       title,
       description,
       tags: tags ? tags.split(",").map((t) => t.trim()) : [],
-      filePath: `/uploads/${req.file.filename}`,
+      filePath: req.file.path,
     });
 
     await video.save();
+
     res.json({ message: "Video uploaded successfully", video });
   } catch (err) {
-    console.error(err);
+    console.error("Upload error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
+
 
 export default router;
