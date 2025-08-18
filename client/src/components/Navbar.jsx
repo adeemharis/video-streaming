@@ -10,12 +10,7 @@ export default function Navbar({ onLoginClick }) {
     if (user) {
       navigate("/profile");
     } else {
-      // Instead of redirect → open login modal
-      if (onLoginClick) {
-        onLoginClick();
-      } else {
-        alert("Please sign up or log in to continue.");
-      }
+      onOpenAuthModal(); // 🔑 open login/signup modal
     }
   };
 

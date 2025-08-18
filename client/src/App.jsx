@@ -17,8 +17,8 @@ export default function App() {
 
   return (
     <>
-      <Navbar onLoginClick={() => setShowAuthModal(true)} />
-
+      <Navbar onOpenAuthModal={() => setShowAuthModal(true)} />
+      <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<SearchResults />} />
@@ -38,9 +38,9 @@ export default function App() {
         <Route path="/tag/:tag" element={<SearchResults />} />
       </Routes>
 
-      {showAuthModal && (
+      {/* {showAuthModal && (
         <AuthModal onClose={() => setShowAuthModal(false)} />
-      )}
+      )} */}
     </>
   );
 }
