@@ -41,7 +41,7 @@ useEffect(() => {
   return (
     <div className="container" style={{ marginTop: 80 }}>
       <video controls style={{ width: "100%", maxHeight: "70vh", background: "#000" }}>
-        <source src={`http://localhost:5000${video.filePath}`} type="video/mp4" />
+        <source src={video.filePath} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 

@@ -74,6 +74,7 @@ router.post("/upload", requireAuth, upload.single("video"), async (req, res) => 
       description,
       tags: tags ? tags.split(",").map((t) => t.trim()) : [],
       filePath: req.file.path,
+      cloudinaryId: req.file.filename,  // Save Cloudinary public_id
     });
 
     await video.save();
