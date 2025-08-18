@@ -4,16 +4,33 @@ import path from "path";
 import Video from "../models/Video.js";
 import { requireAuth } from "../middleware/auth.js";
 
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+
 const router = express.Router();
 
 // configure multer storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // folder to store videos
-  },
-  filename: (req, file, cb) => {
-    const unique = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, unique + path.extname(file.originalname));
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "uploads/"); // folder to store videos
+//   },
+//   filename: (req, file, cb) => {
+//     const unique = Date.now() + "-" + Math.round(Math.random() * 1e9);
+//     cb(null, unique + path.extname(file.originalname));
+//   },
+// });
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "videos",
+    resource_type: "video",
   },
 });
 
