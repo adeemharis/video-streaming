@@ -15,10 +15,25 @@ import VideoPlayer from "./pages/VideoPlayer";
 export default function App() {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
+  const handleLogin = (form) => {
+    console.log("Login with", form);
+    setShowAuthModal(false);
+  };
+
+  const handleSignup = (form) => {
+    console.log("Signup with", form);
+    setShowAuthModal(false);
+  };
+
   return (
     <>
       <Navbar onOpenAuthModal={() => setShowAuthModal(true)} />
-      <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      <AuthModal
+        open={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onLogin={handleLogin}
+        onSignup={handleSignup}
+      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<SearchResults />} />
