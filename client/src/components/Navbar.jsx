@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FaUserCircle, FaUpload } from "react-icons/fa";
+import { FaUserCircle, FaUpload , FaSignOutAlt} from "react-icons/fa";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Navbar({ onOpenAuthModal }) {
@@ -54,10 +54,11 @@ export default function Navbar({ onOpenAuthModal }) {
         {user && (
           <button
             onClick={logout}
-            className="btn"
-            style={{ marginLeft: "8px" }}
+            title="Logout"
+            style={{ background: "none", border: "none", cursor: "pointer" }}
+            // style={{ marginLeft: "8px" }}
           >
-            Logout
+            <FaSignOutAlt size={26} color="#64748b" />
           </button>
         )}
       </div>
