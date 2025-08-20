@@ -6,16 +6,25 @@ import { upload } from "../middleware/upload.js";
 
 const router = express.Router();
 
+
 // Upload/change profile image
 router.post("/profile/image", requireAuth, upload.single("profileImage"), async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
-    user.profileImage = req.file.path; // Cloudinary returns URL in path
-    await user.save();
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+
+    // Upload to Cloudinary
+    const imageUrl = await uploadToCloudinary(req.file.buffer);
+
+    // Save URL to DB
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { profileImage: imageUrl },
+      { new: true }
+    );
 
     res.json({ profileImage: user.profileImage });
   } catch (err) {
-    console.error(err);
+    console.error("Image upload error:", err);
     res.status(500).json({ message: "Failed to upload image" });
   }
 });
