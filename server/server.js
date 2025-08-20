@@ -7,8 +7,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.js";
 import videoRoutes from "./routes/videoRoutes.js";
 import videoPlayRoutes from "./routes/videoPlayRoutes.js";
-
-import path from "path";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
@@ -55,7 +54,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
 
 // health
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
@@ -64,6 +63,7 @@ app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/videos", videoRoutes);
 app.use("/api/playvideos", videoPlayRoutes);
+app.use("/api/users", userRoutes);
 
 // start
 mongoose

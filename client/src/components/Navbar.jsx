@@ -42,14 +42,22 @@ export default function Navbar({ onOpenAuthModal }) {
         </button>
 
         {/* Profile button (icon) */}
-        <button
-          onClick={handleProfile}
-          title="Profile"
-          style={{ background: "none", border: "none", cursor: "pointer" }}
-        >
+        {user ? (
+          <img
+            src={user.profileImage || "/default-avatar.png"}
+            alt="Profile"
+            className="w-8 h-8 rounded-full cursor-pointer"
+            onClick={() => navigate("/profile")}
+          />
+        ) : (
+          <button
+            onClick={handleProfile}
+            title="Profile"
+            style={{ background: "none", border: "none", cursor: "pointer" }}
+          >
           <FaUserCircle size={26} color="#64748b" />
         </button>
-
+        )}
         {/* Logout (only if logged in) */}
         {user && (
           <button
