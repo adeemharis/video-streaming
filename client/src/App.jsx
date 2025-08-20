@@ -29,7 +29,7 @@ export default function App() {
     <>
       <Navbar onOpenAuthModal={() => setShowAuthModal(true)} />
       <AuthModal
-        open={showAuthModal}
+        isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         onLogin={handleLogin}
         onSignup={handleSignup}
