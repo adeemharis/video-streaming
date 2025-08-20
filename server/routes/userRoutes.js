@@ -1,13 +1,13 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import { auth } from "../middleware/auth.js";
+import { requireAuth } from "../middleware/auth.js";
 import User from "../models/User.js";
 import { upload } from "../middleware/upload.js";
 
 const router = express.Router();
 
 // Upload/change profile image
-router.post("/profile/image", auth, upload.single("profileImage"), async (req, res) => {
+router.post("/profile/image", requireAuth, upload.single("profileImage"), async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     user.profileImage = req.file.path; // Cloudinary returns URL in path
@@ -21,7 +21,7 @@ router.post("/profile/image", auth, upload.single("profileImage"), async (req, r
 });
 
 // Change password
-router.post("/change-password", auth, async (req, res) => {
+router.post("/change-password", requireAuth, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     const user = await User.findById(req.user._id);
