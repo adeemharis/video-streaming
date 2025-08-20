@@ -51,7 +51,13 @@ export default function Navbar({ onOpenAuthModal }) {
               onClick={() => navigate("/profile")}
             />
             ) : (
-              <FaUserCircle size={26} color="#64748b" />
+                <button
+                    onClick={handleProfile}
+                    title="Profile"
+                    style={{ background: "none", border: "none", cursor: "pointer" }}
+                  >
+                  <FaUserCircle size={26} color="#64748b" />
+                </button>
             )
           ) : (
           <button
