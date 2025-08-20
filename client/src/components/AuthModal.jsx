@@ -1,25 +1,84 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 export default function AuthModal({ isOpen, onClose, onLogin, onSignup }) {
-  const [mode, setMode] = useState("login"); 
+  const [mode, setMode] = useState("login");
   const [form, setForm] = useState({ email: "", password: "", username: "" });
+
+  // Close on ESC and lock background scroll while open
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => e.key === "Escape" && onClose?.();
+    window.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
-  return (
-    <div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-    >
-      <div className="relative bg-white p-6 rounded-lg shadow-lg w-96">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-gray-600 hover:text-black text-xl"
-        >
-          ✖
-        </button>
+  const overlayStyle = {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.5)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 9999,
+  };
 
-        <h2 className="text-xl font-bold mb-4 text-center">
+  const modalStyle = {
+    position: "relative",
+    background: "#fff",
+    width: "min(420px, 92vw)",
+    borderRadius: 12,
+    padding: 20,
+    boxShadow: "0 12px 30px rgba(0,0,0,.25)",
+  };
+
+  const inputStyle = {
+    width: "100%",
+    border: "1px solid #e5e7eb",
+    borderRadius: 8,
+    padding: "10px 12px",
+    marginBottom: 10,
+    fontSize: 14,
+  };
+
+  const buttonStyle = {
+    width: "100%",
+    border: "none",
+    borderRadius: 8,
+    padding: "10px 12px",
+    fontWeight: 600,
+    cursor: "pointer",
+    background: "#2563eb",
+    color: "#fff",
+  };
+
+  const closeStyle = {
+    position: "absolute",
+    top: 10,
+    right: 12,
+    background: "transparent",
+    border: "none",
+    fontSize: 20,
+    cursor: "pointer",
+    color: "#6b7280",
+  };
+
+  // Click on backdrop closes; click inside modal does not
+  const stop = (e) => e.stopPropagation();
+
+  return createPortal(
+    <div style={overlayStyle} onClick={onClose}>
+      <div style={modalStyle} onClick={stop} role="dialog" aria-modal="true">
+        <button aria-label="Close" onClick={onClose} style={closeStyle}>✖</button>
+
+        <h2 style={{ fontSize: 20, fontWeight: 700, textAlign: "center", marginBottom: 14 }}>
           {mode === "login" ? "Login" : "Signup"}
         </h2>
 
@@ -29,7 +88,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onSignup }) {
             placeholder="Username"
             value={form.username}
             onChange={(e) => setForm({ ...form, username: e.target.value })}
-            className="w-full border p-2 mb-2 rounded"
+            style={inputStyle}
           />
         )}
 
@@ -38,31 +97,30 @@ export default function AuthModal({ isOpen, onClose, onLogin, onSignup }) {
           placeholder="Email"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className="w-full border p-2 mb-2 rounded"
+          style={inputStyle}
         />
+
         <input
           type="password"
           placeholder="Password"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
-          className="w-full border p-2 mb-4 rounded"
+          style={{ ...inputStyle, marginBottom: 14 }}
         />
 
         <button
-          onClick={() =>
-            mode === "login" ? onLogin(form) : onSignup(form)
-          }
-          className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700 transition"
+          onClick={() => (mode === "login" ? onLogin?.(form) : onSignup?.(form))}
+          style={buttonStyle}
         >
           {mode === "login" ? "Login" : "Signup"}
         </button>
 
-        <p className="text-sm mt-4 text-center">
+        <p style={{ fontSize: 13, textAlign: "center", marginTop: 12 }}>
           {mode === "login" ? (
             <>
               Don’t have an account?{" "}
               <span
-                className="text-blue-600 cursor-pointer"
+                style={{ color: "#2563eb", cursor: "pointer" }}
                 onClick={() => setMode("signup")}
               >
                 Signup
@@ -72,7 +130,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onSignup }) {
             <>
               Already have an account?{" "}
               <span
-                className="text-blue-600 cursor-pointer"
+                style={{ color: "#2563eb", cursor: "pointer" }}
                 onClick={() => setMode("login")}
               >
                 Login
@@ -81,6 +139,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onSignup }) {
           )}
         </p>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
