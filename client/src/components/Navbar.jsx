@@ -47,6 +47,12 @@ export default function Navbar({ onOpenAuthModal }) {
             <img
               src={user.profileImage || "/default-avatar.png"}
               alt="Profile"
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: "50%",
+                objectFit: "cover",
+              }}
               className="w-8 h-8 rounded-full cursor-pointer"
               onClick={() => navigate("/profile")}
             />
