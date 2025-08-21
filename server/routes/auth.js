@@ -72,8 +72,11 @@ router.post("/logout", (_req, res) => {
 });
 
 router.get("/me", requireAuth, async (req, res) => {
-  const user = await User.findById(req.user.id).select("_id username email");
-  res.json({ user });
+  const user = await User.findById(req.user.id).select("_id username email profileImage");
+  // res.json({ user });
+  res.json({
+      user: { id: user._id, username: user.username, email: user.email, profileImage: user.profileImage || null }
+    });
 });
 
 export default router;
