@@ -59,7 +59,7 @@ router.post("/login", async (req, res) => {
     if (!ok) return res.status(400).json({ message: "Invalid credentials" });
 
     setAuthCookie(res, user._id);
-    return res.json({ user: { id: user._id, username: user.username, email: user.email } });
+    return res.json({ user: { id: user._id, username: user.username, email: user.email, profileImage: user.profileImage || null } });
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: "Server error" });
