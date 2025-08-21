@@ -22,6 +22,8 @@ router.post("/profile/image", requireAuth, upload.single("profileImage"), async 
       { new: true }
     );
 
+    if (!user) return res.status(404).json({ message: "User not found" });
+
     res.json({ profileImage: user.profileImage });
   } catch (err) {
     console.error("Image upload error:", err);
