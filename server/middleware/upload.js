@@ -3,7 +3,8 @@ import cloudinary from "../utils/cloudinary.js";
 import streamifier from "streamifier";
 
 // Multer with memory storage
-// const storage = multer.memoryStorage();
+const storage = multer.memoryStorage();
+export const upload = multer({ storage });
 
 // Helper to upload buffer to Cloudinary
 export const uploadToCloudinary = (fileBuffer, folder = "profile_images") => {
@@ -18,5 +19,3 @@ export const uploadToCloudinary = (fileBuffer, folder = "profile_images") => {
     streamifier.createReadStream(fileBuffer).pipe(uploadStream);
   });
 };
-
-// export const upload = multer({ storage });
