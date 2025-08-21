@@ -36,7 +36,7 @@ router.post("/signup", async (req, res) => {
 
     setAuthCookie(res, newUser._id);
     return res.status(201).json({
-      user: { id: newUser._id, username: newUser.username, email: newUser.email }
+      user: { id: newUser._id, username: newUser.username, email: newUser.email, profileImage: newUser.profileImage || null }
     });
   } catch (e) {
     console.error(e);
